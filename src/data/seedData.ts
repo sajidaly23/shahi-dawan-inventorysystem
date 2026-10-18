@@ -38,7 +38,7 @@ export const INITIAL_SETTINGS: SystemSettings = {
 export const INITIAL_USERS: UserProfile[] = [
   {
     id: 'usr-admin',
-    name: 'Malik Jahangir Khan',
+    name: 'Zain',
     role: 'admin',
     email: 'admin@shahidiwan.com',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',

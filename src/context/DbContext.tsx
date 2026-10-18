@@ -174,7 +174,7 @@ const safeSetItem = (key: string, value: string): void => {
 export const DbProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // 1. Initial State Loading from Seed Data (SSR-Safe)
   const [settings, setSettings] = useState<SystemSettings>(INITIAL_SETTINGS);
-  const [users] = useState<UserProfile[]>(INITIAL_USERS);
+  const [users, setUsers] = useState<UserProfile[]>(INITIAL_USERS);
   const [currentUser, setCurrentUser] = useState<UserProfile>(INITIAL_USERS[0]);
   const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>(INITIAL_RAW_MATERIALS);
   const [suppliers, setSuppliers] = useState<Supplier[]>(INITIAL_SUPPLIERS);
@@ -196,6 +196,55 @@ export const DbProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   // 2. Load Persisted State from LocalStorage on Client Mount
   useEffect(() => {
     try {
+      const savedUser = safeGetItem(`${STORAGE_KEY}_currentUser`);
+      if (savedUser) {
+        try {
+          const parsedUser = JSON.parse(savedUser);
+          if (parsedUser && parsedUser.name) {
+            setCurrentUser(parsedUser);
+          }
+        } catch {}
+      }
+
+      // Check live authenticated session via /api/auth/session to ensure the original logged-in admin is shown
+      fetch('/api/auth/session')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.authenticated && data?.user) {
+            const activeUser: UserProfile = {
+              id: data.user.userId || 'usr-admin',
+              name: data.user.name,
+              role: data.user.role || 'admin',
+              email: data.user.email,
+              avatar:
+                data.user.avatar ||
+                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+              title: data.user.role === 'admin' ? 'General Managing Director' : 'Staff Member',
+              department: data.user.department || 'Executive',
+              permissions: ['all'],
+            };
+            setCurrentUser(activeUser);
+            safeSetItem(`${STORAGE_KEY}_currentUser`, JSON.stringify(activeUser));
+
+            // Also update the users list so the current user reflects in the role switcher
+            setUsers((prevUsers) => {
+              const idx = prevUsers.findIndex(
+                (u) =>
+                  u.email?.toLowerCase() === activeUser.email?.toLowerCase() ||
+                  u.id === activeUser.id ||
+                  (activeUser.role === 'admin' && u.role === 'admin')
+              );
+              if (idx >= 0) {
+                const next = [...prevUsers];
+                next[idx] = { ...next[idx], ...activeUser };
+                return next;
+              }
+              return [activeUser, ...prevUsers];
+            });
+          }
+        })
+        .catch(() => {});
+
       const savedSettings = safeGetItem(`${STORAGE_KEY}_settings`);
       if (savedSettings) setSettings(JSON.parse(savedSettings));
 
@@ -257,6 +306,10 @@ export const DbProvider: React.FC<{ children: React.ReactNode }> = ({ children }
   }, []);
 
   // 3. Persist to LocalStorage whenever state changes (only after initial hydration)
+  useEffect(() => {
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_currentUser`, JSON.stringify(currentUser));
+  }, [currentUser, isHydrated]);
   useEffect(() => {
     if (!isHydrated) return;
     safeSetItem(`${STORAGE_KEY}_settings`, JSON.stringify(settings));

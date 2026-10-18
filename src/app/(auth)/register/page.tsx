@@ -9,7 +9,7 @@ import { UserRole } from '@/types';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { showToast } = useDb();
+  const { showToast, setCurrentUser } = useDb();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -49,6 +49,25 @@ export default function RegisterPage() {
         setError(data.error || 'Failed to create account.');
         setLoading(false);
         return;
+      }
+
+      if (data.user) {
+        const loggedUser = {
+          id: data.user.userId || 'usr-admin',
+          name: data.user.name,
+          role: data.user.role || 'admin',
+          email: data.user.email,
+          avatar:
+            data.user.avatar ||
+            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+          title: data.user.role === 'admin' ? 'General Managing Director' : 'Staff Member',
+          department: data.user.department || 'Executive',
+          permissions: ['all'],
+        };
+        setCurrentUser(loggedUser);
+        try {
+          localStorage.setItem('SHAHI_DIWAN_ERP_V3_currentUser', JSON.stringify(loggedUser));
+        } catch {}
       }
 
       showToast('success', 'Account Registered', 'Your staff account is ready. Redirecting...');

@@ -10,7 +10,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get('redirect') || '/dashboard';
-  const { showToast } = useDb();
+  const { showToast, setCurrentUser } = useDb();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -36,6 +36,25 @@ export default function LoginPage() {
         setError(data.error || 'Invalid email or password.');
         setLoading(false);
         return;
+      }
+
+      if (data.user) {
+        const loggedUser = {
+          id: data.user.userId || 'usr-admin',
+          name: data.user.name,
+          role: data.user.role || 'admin',
+          email: data.user.email,
+          avatar:
+            data.user.avatar ||
+            'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+          title: data.user.role === 'admin' ? 'General Managing Director' : 'Staff Member',
+          department: data.user.department || 'Executive',
+          permissions: ['all'],
+        };
+        setCurrentUser(loggedUser);
+        try {
+          localStorage.setItem('SHAHI_DIWAN_ERP_V3_currentUser', JSON.stringify(loggedUser));
+        } catch {}
       }
 
       showToast('success', 'Welcome Back', `Logged in as ${data.user?.name || 'Staff'}.`);

@@ -85,7 +85,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         },
         {
           id: 'recipes',
-          label: 'Recipe & BOM Engine',
+          label: 'Dish Recipes',
           icon: <BookOpen className="w-4 h-4" />,
           highlight: true,
           badge: 'Core BOM',
@@ -93,17 +93,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
         },
         {
           id: 'purchases',
-          label: 'Stock In / Purchases',
+          label: 'Purchase & Stock',
           icon: <Truck className="w-4 h-4" />,
         },
         {
           id: 'stock-ledger',
-          label: 'Sales & Orders (Ledger)',
+          label: 'Sales History',
           icon: <History className="w-4 h-4" />,
         },
         {
           id: 'waste',
-          label: 'Waste Management',
+          label: 'Food Waste',
           icon: <Trash2 className="w-4 h-4" />,
         },
       ],
@@ -143,21 +143,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
       items: [
         {
           id: 'hotel-pms',
-          label: 'Room Matrix & PMS',
+          label: 'Room Booking',
           icon: <Building2 className="w-4 h-4" />,
           badge: occupiedRoomsCount > 0 ? `${occupiedRoomsCount} Occ` : undefined,
           badgeColor: 'emerald',
         },
         {
           id: 'folio-billing',
-          label: 'Hotel + Dining Folios',
+          label: 'Room Bills',
           icon: <Receipt className="w-4 h-4" />,
           badge: 'Integrated',
           badgeColor: 'amber',
         },
         {
           id: 'guests',
-          label: 'Guest Directory CRM',
+          label: 'Guest List',
           icon: <Users className="w-4 h-4" />,
         },
       ],
@@ -167,7 +167,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       items: [
         {
           id: 'suppliers',
-          label: 'Suppliers Directory',
+          label: 'Suppliers',
           icon: <Contact className="w-4 h-4" />,
         },
         {
@@ -177,7 +177,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         },
         {
           id: 'audit-logs',
-          label: 'Audit & Compliance',
+          label: 'Activity Logs',
           icon: <ShieldCheck className="w-4 h-4" />,
         },
         {
