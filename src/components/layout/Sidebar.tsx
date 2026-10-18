@@ -18,8 +18,7 @@ import {
   BarChart3,
   ShieldCheck,
   Settings,
-  ChevronRight,
-  AlertTriangle,
+  Sparkles,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -35,7 +34,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { rawMaterials, tables, rooms, currentUser } = useDb();
+  const { rawMaterials, tables, rooms, currentUser, settings } = useDb();
+  const isLight = settings?.theme === 'light';
 
   const lowStockCount = rawMaterials.filter(
     (m) => m.status === 'low_stock' || m.status === 'out_of_stock'
@@ -118,6 +118,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           id: 'kds',
           label: 'Kitchen Display (KDS)',
           icon: <ChefHat className="w-4 h-4" />,
+          badge: 'Live',
+          badgeColor: 'amber',
         },
         {
           id: 'menu',
@@ -189,22 +191,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Mobile Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-sm lg:hidden no-print"
+          className="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-md lg:hidden no-print"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-16 bottom-0 left-0 z-40 w-64 bg-slate-900/95 border-r border-slate-800 transition-transform duration-300 ease-in-out flex flex-col no-print lg:static lg:translate-x-0 ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed top-16 bottom-0 left-0 z-40 w-64 transition-all duration-300 ease-in-out flex flex-col no-print lg:static lg:translate-x-0 ${
+          isLight
+            ? 'bg-slate-900 border-r border-slate-800 text-slate-100 shadow-xl'
+            : 'bg-[#0b101d]/95 backdrop-blur-xl border-r border-slate-800/80 text-slate-100 shadow-2xl shadow-black/40'
+        } ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {/* Navigation Item List */}
-        <div className="flex-1 overflow-y-auto p-3 space-y-6">
+        <div className="flex-1 overflow-y-auto p-3 space-y-5 scrollbar-thin">
           {navGroups.map((group) => (
             <div key={group.title} className="space-y-1">
-              <div className="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-400">
+              <div className="px-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-mono">
                 {group.title}
               </div>
               <div className="space-y-0.5 pt-1">
@@ -217,28 +221,32 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         onSelectTab(item.id);
                         onClose();
                       }}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all group ${
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all group cursor-pointer relative ${
                         isActive
-                          ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20 font-bold'
-                          : 'text-slate-300 hover:text-white hover:bg-slate-800/80'
+                          ? 'gold-gradient-bg text-slate-950 font-bold shadow-lg shadow-amber-500/25'
+                          : 'text-slate-300 hover:text-white hover:bg-slate-800/70 hover:translate-x-1'
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         <div
-                          className={`${
-                            isActive ? 'text-slate-950' : item.highlight ? 'text-amber-400' : 'text-slate-400 group-hover:text-amber-400'
+                          className={`transition-colors ${
+                            isActive
+                              ? 'text-slate-950'
+                              : item.highlight
+                              ? 'text-amber-400 group-hover:text-amber-300'
+                              : 'text-slate-400 group-hover:text-amber-400'
                           }`}
                         >
                           {item.icon}
                         </div>
-                        <span className="truncate">{item.label}</span>
+                        <span className="truncate tracking-tight">{item.label}</span>
                       </div>
 
                       {item.badge && (
                         <span
-                          className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-tight shrink-0 ${
+                          className={`text-[9px] px-2 py-0.5 rounded-full font-extrabold uppercase tracking-tight shrink-0 transition-colors ${
                             isActive
-                              ? 'bg-slate-950/20 text-slate-950'
+                              ? 'bg-slate-950/25 text-slate-950'
                               : item.badgeColor === 'rose'
                               ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
                               : item.badgeColor === 'amber'
@@ -260,16 +268,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* User Card at Bottom */}
-        <div className="p-3 border-t border-slate-800 bg-slate-900/90 shrink-0">
-          <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-800/50 border border-slate-700/50">
-            <img
-              src={currentUser.avatar}
-              alt={currentUser.name}
-              className="w-8 h-8 rounded-lg object-cover ring-1 ring-amber-500/40 shrink-0"
-            />
+        <div className="p-3 border-t border-slate-800/80 bg-[#070b14]/80 shrink-0">
+          <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-800/40 border border-slate-700/40">
+            <div className="relative shrink-0">
+              <img
+                src={currentUser.avatar}
+                alt={currentUser.name}
+                className="w-8 h-8 rounded-lg object-cover ring-1 ring-amber-500/50"
+              />
+              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-900" />
+            </div>
             <div className="flex-1 min-w-0">
               <div className="text-xs font-bold text-white truncate">{currentUser.name}</div>
-              <div className="text-[10px] text-amber-400 truncate">{currentUser.title}</div>
+              <div className="text-[10px] text-amber-400 truncate flex items-center gap-1">
+                <span>{currentUser.title}</span>
+              </div>
             </div>
           </div>
         </div>

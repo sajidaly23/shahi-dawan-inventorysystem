@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
+import { useDb } from '../../context/DbContext';
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,6 +21,9 @@ export const Modal: React.FC<ModalProps> = ({
   maxWidth = '2xl',
   icon,
 }) => {
+  const { settings } = useDb();
+  const isLight = settings?.theme === 'light';
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
@@ -52,33 +56,57 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto no-print">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-slate-950/80 backdrop-blur-md transition-opacity animate-fade-in"
         onClick={onClose}
       />
 
       {/* Modal Container */}
       <div
-        className={`relative w-full ${maxWidthClasses[maxWidth]} bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden z-10 my-8 max-h-[90vh] flex flex-col text-slate-900`}
+        className={`relative w-full ${maxWidthClasses[maxWidth]} rounded-3xl shadow-2xl overflow-hidden z-10 my-8 max-h-[90vh] flex flex-col transition-all duration-200 border ${
+          isLight
+            ? 'bg-white border-slate-200 text-slate-900 shadow-slate-300/50'
+            : 'bg-[#0f172a] border-slate-800 text-slate-100 shadow-black/80'
+        }`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 bg-slate-50 shrink-0">
+        <div
+          className={`flex items-center justify-between px-6 py-4.5 border-b shrink-0 ${
+            isLight
+              ? 'bg-slate-50 border-slate-200'
+              : 'bg-slate-900/90 border-slate-800/80'
+          }`}
+        >
           <div className="flex items-center gap-3">
-            {icon && <div className="p-2 rounded-xl bg-amber-100 text-amber-700 border border-amber-300">{icon}</div>}
+            {icon && (
+              <div className="p-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                {icon}
+              </div>
+            )}
             <div>
-              <h3 className="text-lg font-bold text-slate-900 tracking-tight">{title}</h3>
-              {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
+              <h3 className="text-lg font-extrabold tracking-tight font-royal text-white drop-shadow-xs">
+                {title}
+              </h3>
+              {subtitle && (
+                <p className={`text-xs mt-0.5 ${isLight ? 'text-slate-500' : 'text-slate-400'}`}>
+                  {subtitle}
+                </p>
+              )}
             </div>
           </div>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-800 p-2 rounded-xl hover:bg-slate-200 transition"
+            className={`p-2 rounded-xl transition cursor-pointer ${
+              isLight
+                ? 'text-slate-400 hover:text-slate-800 hover:bg-slate-200'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800'
+            }`}
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto flex-1">{children}</div>
+        <div className="p-6 overflow-y-auto flex-1 scrollbar-thin">{children}</div>
       </div>
     </div>
   );

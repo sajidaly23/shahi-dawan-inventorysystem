@@ -12,6 +12,8 @@
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    background-color: #090d16;
+    color: #f1f5f9;
   }
 
   #root {
@@ -28,18 +30,18 @@
   font-family: var(--font-mono);
 }
 
-/* Custom Scrollbars */
+/* Custom Luxury Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(241, 245, 249, 0.8);
+  background: rgba(15, 23, 42, 0.6);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(203, 213, 225, 0.8);
+  background: rgba(51, 65, 85, 0.8);
   border-radius: 9999px;
 }
 
@@ -47,40 +49,174 @@
   background: rgba(217, 119, 6, 0.8);
 }
 
-/* Glassmorphism & Card Styles */
+/* Luxury Aesthetics & Glassmorphism */
 .glass-panel {
-  background: #ffffff;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
 }
 
 .glass-panel-light {
-  background: #ffffff;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(71, 85, 105, 0.4);
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.2);
 }
 
 .gold-gradient-text {
-  background: linear-gradient(135deg, #d97706 0%, #92400e 100%);
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 40%, #d97706 75%, #b45309 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+}
+
 .royal-badge {
-  background: linear-gradient(135deg, rgba(254, 243, 199, 0.8) 0%, rgba(253, 230, 138, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.25) 100%);
   border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fde68a;
+}
+
+.glow-amber {
+  box-shadow: 0 0 20px -3px rgba(245, 158, 11, 0.25);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.25);
+}
+
+.glow-sky {
+  box-shadow: 0 0 20px -3px rgba(56, 189, 248, 0.25);
+}
+
+/* Animations */
+@keyframes pulseSlow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulseSlow 3s infinite ease-in-out;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Executive Dark Luxury Adaptations for Legacy Light Classes
+   This guarantees that every module in the ERP inherits the 5-star prestige theme
+   without mismatched white/grey blocks.
+   ───────────────────────────────────────────────────────────────────────────── */
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark body {
+  background-color: #090d16;
+  color: #f1f5f9;
+}
+
+html.dark .bg-white {
+  background-color: #0f172a !important;
+}
+
+html.dark .bg-slate-50 {
+  background-color: #0b101e !important;
+}
+
+html.dark .bg-slate-100 {
+  background-color: #1e293b !important;
+}
+
+html.dark .border-slate-200 {
+  border-color: #1e293b !important;
+}
+
+html.dark .border-slate-300 {
+  border-color: #334155 !important;
+}
+
+html.dark .text-slate-900 {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+
+html.dark .text-slate-700 {
+  color: #cbd5e1 !important;
+}
+
+html.dark .text-slate-600 {
+  color: #94a3b8 !important;
+}
+
+html.dark .text-slate-500 {
+  color: #64748b !important;
+}
+
+html.dark input:not([type="checkbox"]):not([type="radio"]),
+html.dark select,
+html.dark textarea {
+  background-color: #0c1222 !important;
+  border-color: #334155 !important;
+  color: #f8fafc !important;
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  border-color: #f59e0b !important;
+  outline: none !important;
+}
+
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #1e293b !important;
+}
+
+html.dark table tbody tr:hover {
+  background-color: rgba(30, 41, 59, 0.4) !important;
 }
 
 /* Print Stylesheet for Thermal Receipts & Hotel Invoices */
 @media print {
-  body {
+  html,
+  html.dark,
+  body,
+  html.dark body {
     background: #ffffff !important;
     color: #000000 !important;
     font-size: 12pt;
+  }
+
+  html.dark .bg-white,
+  html.dark .bg-slate-50,
+  html.dark .bg-slate-100 {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  html.dark .text-slate-900,
+  html.dark .text-slate-800,
+  html.dark .text-slate-700,
+  html.dark .text-slate-600,
+  html.dark .text-white {
+    color: #000000 !important;
+  }
+
+  html.dark .border-slate-200,
+  html.dark .border-slate-300 {
+    border-color: #cccccc !important;
   }
 
   .no-print,

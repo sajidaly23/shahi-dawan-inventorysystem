@@ -173,7 +173,13 @@ export const DbProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 
   const [purchases, setPurchases] = useState<PurchaseInvoice[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_purchases`);
-    return saved ? JSON.parse(saved) : INITIAL_PURCHASES;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    return INITIAL_PURCHASES;
   });
 
   const [recipes, setRecipes] = useState<Recipe[]>(() => {
@@ -188,7 +194,13 @@ export const DbProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 
   const [orders, setOrders] = useState<RestaurantOrder[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_orders`);
-    return saved ? JSON.parse(saved) : INITIAL_ORDERS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    return INITIAL_ORDERS;
   });
 
   const [tables, setTables] = useState<RestaurantTable[]>(() => {
@@ -218,7 +230,13 @@ export const DbProvider: React.FC<{ children: React.ReactNode }> = ({ children }
 
   const [stockLedger, setStockLedger] = useState<StockLedgerEntry[]>(() => {
     const saved = localStorage.getItem(`${STORAGE_KEY}_stockLedger`);
-    return saved ? JSON.parse(saved) : INITIAL_STOCK_LEDGER;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {}
+    }
+    return INITIAL_STOCK_LEDGER;
   });
 
   const [wasteRecords, setWasteRecords] = useState<WasteRecord[]>(() => {
