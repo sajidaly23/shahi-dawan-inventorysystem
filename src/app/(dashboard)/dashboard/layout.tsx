@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Navbar } from '@/components/layout/Navbar';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { AIChatbot } from '@/components/common/AIChatbot';
 import { useDb } from '@/context/DbContext';
 
 export default function DashboardLayout({
@@ -96,6 +97,9 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
+
+      {/* AI Assistant Chatbot */}
+      <AIChatbot />
     </div>
   );
 }
