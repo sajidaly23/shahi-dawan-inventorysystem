@@ -239,30 +239,30 @@ export const POSView: React.FC = () => {
         <div className="p-4 border-b border-slate-800 space-y-3 bg-slate-900/90 shrink-0">
           <div className="flex items-center justify-between gap-4">
             <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-slate-300 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search menu items, biryani, karahi, steaks..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-500"
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-800/90 border border-slate-700 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 font-medium"
               />
             </div>
-            <span className="text-xs text-slate-400 hidden sm:inline">
-              <strong className="text-white">{filteredMenuItems.length}</strong> Dishes
+            <span className="text-xs text-slate-300 hidden sm:inline font-medium">
+              <strong className="text-amber-400 font-bold">{filteredMenuItems.length}</strong> Dishes
             </span>
           </div>
 
           {/* Category Tabs */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs scrollbar-thin">
             {MENU_CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition border ${
                   selectedCategory === cat
-                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
-                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                    ? 'bg-amber-500 border-amber-400 text-slate-950 shadow-md shadow-amber-500/25'
+                    : 'bg-slate-800/90 border-slate-700/70 text-slate-200 hover:text-white hover:bg-slate-700 hover:border-slate-600'
                 }`}
               >
                 {cat}
@@ -322,36 +322,36 @@ export const POSView: React.FC = () => {
       {/* RIGHT SIDE: POS ORDER CART & ORDER BILLING (35%) */}
       <div className="w-full lg:w-96 flex flex-col bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl shrink-0">
         {/* Order Type Tabs */}
-        <div className="p-3 border-b border-slate-800 bg-slate-850 space-y-2.5">
-          <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-slate-900 border border-slate-800 text-[11px] font-bold">
+        <div className="p-3 border-b border-slate-800 bg-slate-900/95 space-y-2.5">
+          <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-slate-950 border border-slate-700/80 text-[11px] font-bold">
             <button
               onClick={() => setOrderType('dine_in')}
-              className={`py-1.5 rounded-lg transition ${
-                orderType === 'dine_in' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white'
+              className={`py-1.5 rounded-lg transition font-extrabold ${
+                orderType === 'dine_in' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-200 hover:text-white hover:bg-slate-800'
               }`}
             >
               Dine-In
             </button>
             <button
               onClick={() => setOrderType('takeaway')}
-              className={`py-1.5 rounded-lg transition ${
-                orderType === 'takeaway' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white'
+              className={`py-1.5 rounded-lg transition font-extrabold ${
+                orderType === 'takeaway' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-200 hover:text-white hover:bg-slate-800'
               }`}
             >
               Takeaway
             </button>
             <button
               onClick={() => setOrderType('delivery')}
-              className={`py-1.5 rounded-lg transition ${
-                orderType === 'delivery' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white'
+              className={`py-1.5 rounded-lg transition font-extrabold ${
+                orderType === 'delivery' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-200 hover:text-white hover:bg-slate-800'
               }`}
             >
               Delivery
             </button>
             <button
               onClick={() => setOrderType('room_service')}
-              className={`py-1.5 rounded-lg transition ${
-                orderType === 'room_service' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white'
+              className={`py-1.5 rounded-lg transition font-extrabold ${
+                orderType === 'room_service' ? 'bg-amber-500 text-slate-950 shadow-md' : 'text-slate-200 hover:text-white hover:bg-slate-800'
               }`}
             >
               Room Serv.
@@ -365,10 +365,10 @@ export const POSView: React.FC = () => {
               <select
                 value={selectedTableId}
                 onChange={(e) => setSelectedTableId(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-amber-500"
               >
                 {tables.map((tbl) => (
-                  <option key={tbl.id} value={tbl.id}>
+                  <option key={tbl.id} value={tbl.id} className="bg-slate-900 text-white py-1">
                     {tbl.name} ({tbl.zone}) — {tbl.status.toUpperCase()}
                   </option>
                 ))}
@@ -382,12 +382,12 @@ export const POSView: React.FC = () => {
               <select
                 value={selectedRoomNumber}
                 onChange={(e) => setSelectedRoomNumber(e.target.value)}
-                className="w-full px-2.5 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white focus:outline-none"
+                className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-amber-500"
               >
                 {hotelBills
                   .filter((b) => b.status === 'open')
                   .map((bill) => (
-                    <option key={bill.id} value={bill.roomNumber}>
+                    <option key={bill.id} value={bill.roomNumber} className="bg-slate-900 text-white py-1">
                       Room {bill.roomNumber} ({bill.guestName})
                     </option>
                   ))}
@@ -398,12 +398,12 @@ export const POSView: React.FC = () => {
 
         {/* Stock Validation Pre-check Warning Banner */}
         {!stockValidation.isValid && (
-          <div className="p-3 bg-rose-500/15 border-b border-rose-500/30 flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5 animate-bounce" />
-            <div className="flex-1 text-[11px] text-rose-200 leading-tight">
-              <strong className="block font-bold text-rose-300">Insufficient BOM Stock:</strong>
+          <div className="p-3 bg-rose-500/20 border-b border-rose-500/40 flex items-start gap-2.5">
+            <AlertTriangle className="w-4 h-4 text-rose-300 shrink-0 mt-0.5 animate-bounce" />
+            <div className="flex-1 text-[11px] text-rose-100 leading-tight">
+              <strong className="block font-bold text-rose-200">Insufficient BOM Stock:</strong>
               {stockValidation.insufficientItems.map((item) => (
-                <span key={item.rawMaterialId} className="block text-[10px] text-rose-300/90 mt-0.5">
+                <span key={item.rawMaterialId} className="block text-[10px] text-rose-200 mt-0.5">
                   • {item.rawMaterialName}: Need {item.requiredFormatted}, have {item.availableFormatted}
                 </span>
               ))}
@@ -414,19 +414,23 @@ export const POSView: React.FC = () => {
         {/* Cart Item List */}
         <div className="flex-1 p-3 overflow-y-auto space-y-2 divide-y divide-slate-800/60">
           {cart.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-500 space-y-2">
-              <ShoppingBag className="w-8 h-8 stroke-1 text-slate-600" />
-              <p className="text-xs">Cart is currently empty.</p>
-              <p className="text-[11px] text-slate-600">Select dishes from the menu to build an order.</p>
+            <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-3">
+              <div className="w-14 h-14 rounded-2xl bg-slate-800 border border-slate-700/80 flex items-center justify-center text-amber-400 shadow-md">
+                <ShoppingBag className="w-7 h-7 stroke-2 text-amber-400" />
+              </div>
+              <p className="text-sm font-bold text-white">Cart is currently empty</p>
+              <p className="text-xs text-slate-300 max-w-[220px] leading-relaxed">
+                Click any dish on the left menu to add it to this order.
+              </p>
             </div>
           ) : (
             cart.map((cartItem) => (
               <div key={cartItem.menuItem.id} className="pt-2 flex items-center justify-between gap-2">
                 <div className="flex-1 min-w-0">
                   <h5 className="text-xs font-bold text-white truncate">{cartItem.menuItem.name}</h5>
-                  <div className="text-[11px] text-slate-400 font-mono">
+                  <div className="text-[11px] text-slate-300 font-mono">
                     {settings.currencySymbol} {cartItem.menuItem.sellingPrice} × {cartItem.quantity} ={' '}
-                    <strong className="text-white">
+                    <strong className="text-amber-400 font-bold">
                       {settings.currencySymbol} {cartItem.menuItem.sellingPrice * cartItem.quantity}
                     </strong>
                   </div>
@@ -490,9 +494,9 @@ export const POSView: React.FC = () => {
                 </span>
               </div>
             )}
-            <div className="flex justify-between text-base font-extrabold text-amber-400 pt-1.5 border-t border-slate-800">
-              <span>Total:</span>
-              <span className="font-mono">
+            <div className="flex justify-between items-center text-base font-extrabold text-amber-400 pt-2 border-t border-slate-800">
+              <span className="text-slate-100 font-bold text-sm">Grand Total:</span>
+              <span className="font-mono text-lg text-amber-400 font-extrabold">
                 {settings.currencySymbol} {grandTotal.toLocaleString()}
               </span>
             </div>
@@ -502,16 +506,24 @@ export const POSView: React.FC = () => {
             <button
               onClick={handleClearCart}
               disabled={cart.length === 0}
-              className="py-2.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-400 hover:text-white text-xs font-semibold disabled:opacity-40 transition"
+              className={`py-2.5 rounded-xl border text-xs font-bold transition ${
+                cart.length === 0
+                  ? 'bg-slate-800/40 border-slate-800 text-slate-500 cursor-not-allowed'
+                  : 'border-slate-700 bg-slate-800 text-slate-200 hover:text-white hover:bg-slate-700 cursor-pointer'
+              }`}
             >
               Clear Cart
             </button>
             <button
               onClick={handleOpenPayment}
               disabled={cart.length === 0}
-              className="py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs shadow-lg shadow-amber-950 disabled:opacity-40 transition flex items-center justify-center gap-1.5"
+              className={`py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-1.5 ${
+                cart.length === 0
+                  ? 'bg-slate-800/60 border border-slate-700/60 text-slate-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-lg shadow-amber-500/25 cursor-pointer active:scale-95'
+              }`}
             >
-              <span>Checkout</span>
+              <span>Proceed to Checkout</span>
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>

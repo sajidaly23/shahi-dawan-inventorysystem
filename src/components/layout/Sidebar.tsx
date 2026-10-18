@@ -201,17 +201,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed top-16 bottom-0 left-0 z-40 w-64 transition-all duration-300 ease-in-out flex flex-col no-print lg:static lg:translate-x-0 ${
+        className={`fixed top-16 bottom-0 left-0 z-40 w-64 transition-all duration-300 ease-in-out flex flex-col no-print lg:static ${
           isLight
             ? 'bg-slate-900 border-r border-slate-800 text-slate-100 shadow-xl'
             : 'bg-[#0b101d]/95 backdrop-blur-xl border-r border-slate-800/80 text-slate-100 shadow-2xl shadow-black/40'
-        } ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        } ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
       >
         {/* Navigation Item List */}
         <div className="flex-1 overflow-y-auto p-3 space-y-5 scrollbar-thin">
           {navGroups.map((group) => (
             <div key={group.title} className="space-y-1">
-              <div className="px-3 text-[9px] font-extrabold uppercase tracking-widest text-slate-500 font-mono">
+              <div className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
                 {group.title}
               </div>
               <div className="space-y-0.5 pt-1">
@@ -224,10 +224,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                         onSelectTab(item.id);
                         onClose();
                       }}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all group cursor-pointer relative ${
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all group cursor-pointer relative ${
                         isActive
                           ? 'gold-gradient-bg text-slate-950 font-bold shadow-lg shadow-amber-500/25'
-                          : 'text-slate-300 hover:text-white hover:bg-slate-800/70 hover:translate-x-1'
+                          : 'text-slate-200 hover:text-white hover:bg-slate-800/80 hover:translate-x-1'
                       }`}
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
@@ -237,7 +237,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                               ? 'text-slate-950'
                               : item.highlight
                               ? 'text-amber-400 group-hover:text-amber-300'
-                              : 'text-slate-400 group-hover:text-amber-400'
+                              : 'text-slate-300 group-hover:text-amber-400'
                           }`}
                         >
                           {item.icon}
