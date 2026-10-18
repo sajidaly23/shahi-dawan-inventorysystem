@@ -233,7 +233,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onNavigate }) =
             className="flex items-center gap-2 px-4 py-2 rounded-xl gold-gradient-bg text-slate-950 font-bold text-xs shadow-lg shadow-amber-500/20 hover:brightness-110 transition transform active:scale-95 cursor-pointer"
           >
             <ShoppingBag className="w-4 h-4 text-slate-950" />
-            <span>Open POS Terminal</span>
+            <span>Open Order Billing</span>
           </button>
         </div>
 

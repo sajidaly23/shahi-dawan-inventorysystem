@@ -74,22 +74,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ],
     },
     {
-      title: 'INVENTORY & RECIPE BOM',
+      title: 'INVENTORY & RECIPES',
       items: [
         {
+          id: 'raw-materials',
+          label: 'Inventory & Stock',
+          icon: <Boxes className="w-4 h-4" />,
+          badge: lowStockCount > 0 ? lowStockCount : undefined,
+          badgeColor: 'rose',
+        },
+        {
           id: 'recipes',
-          label: 'Recipe / BOM Engine',
+          label: 'Recipe & BOM Engine',
           icon: <BookOpen className="w-4 h-4" />,
           highlight: true,
           badge: 'Core BOM',
           badgeColor: 'amber',
-        },
-        {
-          id: 'raw-materials',
-          label: 'Raw Materials & Stock',
-          icon: <Boxes className="w-4 h-4" />,
-          badge: lowStockCount > 0 ? lowStockCount : undefined,
-          badgeColor: 'rose',
         },
         {
           id: 'purchases',
@@ -98,7 +98,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         },
         {
           id: 'stock-ledger',
-          label: 'Stock Ledger Trail',
+          label: 'Sales & Orders (Ledger)',
           icon: <History className="w-4 h-4" />,
         },
         {
@@ -109,24 +109,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ],
     },
     {
-      title: 'RESTAURANT & POS',
+      title: 'RESTAURANT & BILLING',
       items: [
         {
           id: 'pos',
-          label: 'POS Order Terminal',
+          label: 'Order Billing',
           icon: <ShoppingBag className="w-4 h-4" />,
           highlight: true,
         },
         {
           id: 'kds',
-          label: 'Kitchen Display (KDS)',
+          label: 'Kitchen Orders',
           icon: <ChefHat className="w-4 h-4" />,
           badge: 'Live',
           badgeColor: 'amber',
         },
         {
           id: 'menu',
-          label: 'Menu Items & Pricing',
+          label: 'Menu Items',
           icon: <UtensilsCrossed className="w-4 h-4" />,
         },
         {
@@ -163,7 +163,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ],
     },
     {
-      title: 'ADMIN & INTELLIGENCE',
+      title: 'ADMIN & SYSTEM',
       items: [
         {
           id: 'suppliers',
@@ -172,7 +172,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         },
         {
           id: 'reports',
-          label: 'Analytics & Financials',
+          label: 'Reports',
           icon: <BarChart3 className="w-4 h-4" />,
         },
         {
@@ -182,7 +182,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         },
         {
           id: 'settings',
-          label: 'System Parameters',
+          label: 'Settings',
           icon: <Settings className="w-4 h-4" />,
         },
       ],
