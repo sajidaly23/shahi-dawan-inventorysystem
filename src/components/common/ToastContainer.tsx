@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { useDb, ToastMessage } from '../../context/DbContext';
 import { CheckCircle2, AlertTriangle, XCircle, Info, X } from 'lucide-react';

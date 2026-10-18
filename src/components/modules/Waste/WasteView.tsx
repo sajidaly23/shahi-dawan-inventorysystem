@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useMemo } from 'react';
 import { useDb } from '../../../context/DbContext';
 import { WasteRecord, WasteReason, UnitType } from '../../../types';

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import {
   RawMaterial,
@@ -151,152 +153,170 @@ interface DbContextType {
 
 const DbContext = createContext<DbContextType | null>(null);
 
-export const DbProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // 1. Initial State Loading from LocalStorage or Seed Data
-  const [settings, setSettings] = useState<SystemSettings>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_settings`);
-    return saved ? JSON.parse(saved) : INITIAL_SETTINGS;
-  });
+const safeGetItem = (key: string): string | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    return window.localStorage ? window.localStorage.getItem(key) : null;
+  } catch {
+    return null;
+  }
+};
 
+const safeSetItem = (key: string, value: string): void => {
+  if (typeof window === 'undefined') return;
+  try {
+    if (window.localStorage) {
+      window.localStorage.setItem(key, value);
+    }
+  } catch {}
+};
+
+export const DbProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // 1. Initial State Loading from Seed Data (SSR-Safe)
+  const [settings, setSettings] = useState<SystemSettings>(INITIAL_SETTINGS);
   const [users] = useState<UserProfile[]>(INITIAL_USERS);
   const [currentUser, setCurrentUser] = useState<UserProfile>(INITIAL_USERS[0]);
-
-  const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_rawMaterials`);
-    return saved ? JSON.parse(saved) : INITIAL_RAW_MATERIALS;
-  });
-
-  const [suppliers, setSuppliers] = useState<Supplier[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_suppliers`);
-    return saved ? JSON.parse(saved) : INITIAL_SUPPLIERS;
-  });
-
-  const [purchases, setPurchases] = useState<PurchaseInvoice[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_purchases`);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      } catch (e) {}
-    }
-    return INITIAL_PURCHASES;
-  });
-
-  const [recipes, setRecipes] = useState<Recipe[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_recipes`);
-    return saved ? JSON.parse(saved) : INITIAL_RECIPES;
-  });
-
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_menuItems`);
-    return saved ? JSON.parse(saved) : INITIAL_MENU_ITEMS;
-  });
-
-  const [orders, setOrders] = useState<RestaurantOrder[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_orders`);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      } catch (e) {}
-    }
-    return INITIAL_ORDERS;
-  });
-
-  const [tables, setTables] = useState<RestaurantTable[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_tables`);
-    return saved ? JSON.parse(saved) : INITIAL_TABLES;
-  });
-
-  const [rooms, setRooms] = useState<Room[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_rooms`);
-    return saved ? JSON.parse(saved) : INITIAL_ROOMS;
-  });
-
-  const [guests, setGuests] = useState<Guest[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_guests`);
-    return saved ? JSON.parse(saved) : INITIAL_GUESTS;
-  });
-
-  const [reservations, setReservations] = useState<Reservation[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_reservations`);
-    return saved ? JSON.parse(saved) : INITIAL_RESERVATIONS;
-  });
-
-  const [hotelBills, setHotelBills] = useState<HotelBill[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_hotelBills`);
-    return saved ? JSON.parse(saved) : INITIAL_HOTEL_BILLS;
-  });
-
-  const [stockLedger, setStockLedger] = useState<StockLedgerEntry[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_stockLedger`);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      } catch (e) {}
-    }
-    return INITIAL_STOCK_LEDGER;
-  });
-
-  const [wasteRecords, setWasteRecords] = useState<WasteRecord[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_wasteRecords`);
-    return saved ? JSON.parse(saved) : INITIAL_WASTE_RECORDS;
-  });
-
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>(() => {
-    const saved = localStorage.getItem(`${STORAGE_KEY}_auditLogs`);
-    return saved ? JSON.parse(saved) : INITIAL_AUDIT_LOGS;
-  });
-
+  const [rawMaterials, setRawMaterials] = useState<RawMaterial[]>(INITIAL_RAW_MATERIALS);
+  const [suppliers, setSuppliers] = useState<Supplier[]>(INITIAL_SUPPLIERS);
+  const [purchases, setPurchases] = useState<PurchaseInvoice[]>(INITIAL_PURCHASES);
+  const [recipes, setRecipes] = useState<Recipe[]>(INITIAL_RECIPES);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(INITIAL_MENU_ITEMS);
+  const [orders, setOrders] = useState<RestaurantOrder[]>(INITIAL_ORDERS);
+  const [tables, setTables] = useState<RestaurantTable[]>(INITIAL_TABLES);
+  const [rooms, setRooms] = useState<Room[]>(INITIAL_ROOMS);
+  const [guests, setGuests] = useState<Guest[]>(INITIAL_GUESTS);
+  const [reservations, setReservations] = useState<Reservation[]>(INITIAL_RESERVATIONS);
+  const [hotelBills, setHotelBills] = useState<HotelBill[]>(INITIAL_HOTEL_BILLS);
+  const [stockLedger, setStockLedger] = useState<StockLedgerEntry[]>(INITIAL_STOCK_LEDGER);
+  const [wasteRecords, setWasteRecords] = useState<WasteRecord[]>(INITIAL_WASTE_RECORDS);
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>(INITIAL_AUDIT_LOGS);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // 2. Persist to LocalStorage whenever state changes
+  // 2. Load Persisted State from LocalStorage on Client Mount
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_settings`, JSON.stringify(settings));
-  }, [settings]);
+    try {
+      const savedSettings = safeGetItem(`${STORAGE_KEY}_settings`);
+      if (savedSettings) setSettings(JSON.parse(savedSettings));
+
+      const savedMaterials = safeGetItem(`${STORAGE_KEY}_rawMaterials`);
+      if (savedMaterials) setRawMaterials(JSON.parse(savedMaterials));
+
+      const savedSuppliers = safeGetItem(`${STORAGE_KEY}_suppliers`);
+      if (savedSuppliers) setSuppliers(JSON.parse(savedSuppliers));
+
+      const savedPurchases = safeGetItem(`${STORAGE_KEY}_purchases`);
+      if (savedPurchases) {
+        const parsed = JSON.parse(savedPurchases);
+        if (Array.isArray(parsed) && parsed.length > 0) setPurchases(parsed);
+      }
+
+      const savedRecipes = safeGetItem(`${STORAGE_KEY}_recipes`);
+      if (savedRecipes) setRecipes(JSON.parse(savedRecipes));
+
+      const savedMenu = safeGetItem(`${STORAGE_KEY}_menuItems`);
+      if (savedMenu) setMenuItems(JSON.parse(savedMenu));
+
+      const savedOrders = safeGetItem(`${STORAGE_KEY}_orders`);
+      if (savedOrders) {
+        const parsed = JSON.parse(savedOrders);
+        if (Array.isArray(parsed) && parsed.length > 0) setOrders(parsed);
+      }
+
+      const savedTables = safeGetItem(`${STORAGE_KEY}_tables`);
+      if (savedTables) setTables(JSON.parse(savedTables));
+
+      const savedRooms = safeGetItem(`${STORAGE_KEY}_rooms`);
+      if (savedRooms) setRooms(JSON.parse(savedRooms));
+
+      const savedGuests = safeGetItem(`${STORAGE_KEY}_guests`);
+      if (savedGuests) setGuests(JSON.parse(savedGuests));
+
+      const savedReservations = safeGetItem(`${STORAGE_KEY}_reservations`);
+      if (savedReservations) setReservations(JSON.parse(savedReservations));
+
+      const savedBills = safeGetItem(`${STORAGE_KEY}_hotelBills`);
+      if (savedBills) setHotelBills(JSON.parse(savedBills));
+
+      const savedLedger = safeGetItem(`${STORAGE_KEY}_stockLedger`);
+      if (savedLedger) {
+        const parsed = JSON.parse(savedLedger);
+        if (Array.isArray(parsed) && parsed.length > 0) setStockLedger(parsed);
+      }
+
+      const savedWaste = safeGetItem(`${STORAGE_KEY}_wasteRecords`);
+      if (savedWaste) setWasteRecords(JSON.parse(savedWaste));
+
+      const savedAudit = safeGetItem(`${STORAGE_KEY}_auditLogs`);
+      if (savedAudit) setAuditLogs(JSON.parse(savedAudit));
+    } catch (e) {
+      console.warn('Failed to hydrate state from local storage:', e);
+    } finally {
+      setIsHydrated(true);
+    }
+  }, []);
+
+  // 3. Persist to LocalStorage whenever state changes (only after initial hydration)
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_rawMaterials`, JSON.stringify(rawMaterials));
-  }, [rawMaterials]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_settings`, JSON.stringify(settings));
+  }, [settings, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_suppliers`, JSON.stringify(suppliers));
-  }, [suppliers]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_rawMaterials`, JSON.stringify(rawMaterials));
+  }, [rawMaterials, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_purchases`, JSON.stringify(purchases));
-  }, [purchases]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_suppliers`, JSON.stringify(suppliers));
+  }, [suppliers, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_recipes`, JSON.stringify(recipes));
-  }, [recipes]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_purchases`, JSON.stringify(purchases));
+  }, [purchases, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_menuItems`, JSON.stringify(menuItems));
-  }, [menuItems]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_recipes`, JSON.stringify(recipes));
+  }, [recipes, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_orders`, JSON.stringify(orders));
-  }, [orders]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_menuItems`, JSON.stringify(menuItems));
+  }, [menuItems, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_tables`, JSON.stringify(tables));
-  }, [tables]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_orders`, JSON.stringify(orders));
+  }, [orders, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_rooms`, JSON.stringify(rooms));
-  }, [rooms]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_tables`, JSON.stringify(tables));
+  }, [tables, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_guests`, JSON.stringify(guests));
-  }, [guests]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_rooms`, JSON.stringify(rooms));
+  }, [rooms, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_reservations`, JSON.stringify(reservations));
-  }, [reservations]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_guests`, JSON.stringify(guests));
+  }, [guests, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_hotelBills`, JSON.stringify(hotelBills));
-  }, [hotelBills]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_reservations`, JSON.stringify(reservations));
+  }, [reservations, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_stockLedger`, JSON.stringify(stockLedger));
-  }, [stockLedger]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_hotelBills`, JSON.stringify(hotelBills));
+  }, [hotelBills, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_wasteRecords`, JSON.stringify(wasteRecords));
-  }, [wasteRecords]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_stockLedger`, JSON.stringify(stockLedger));
+  }, [stockLedger, isHydrated]);
   useEffect(() => {
-    localStorage.setItem(`${STORAGE_KEY}_auditLogs`, JSON.stringify(auditLogs));
-  }, [auditLogs]);
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_wasteRecords`, JSON.stringify(wasteRecords));
+  }, [wasteRecords, isHydrated]);
+  useEffect(() => {
+    if (!isHydrated) return;
+    safeSetItem(`${STORAGE_KEY}_auditLogs`, JSON.stringify(auditLogs));
+  }, [auditLogs, isHydrated]);
 
   // Lookup Maps
   const rawMaterialsMap = useMemo(() => new Map(rawMaterials.map((r) => [r.id, r])), [rawMaterials]);

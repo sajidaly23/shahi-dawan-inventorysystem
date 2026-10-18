@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { HotelBill } from '../../types';
 import { useDb } from '../../context/DbContext';

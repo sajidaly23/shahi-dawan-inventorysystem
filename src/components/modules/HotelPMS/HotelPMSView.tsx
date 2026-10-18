@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { useDb } from '../../../context/DbContext';
 import { Room, RoomType, RoomStatus, Reservation } from '../../../types';

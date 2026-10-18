@@ -1,32 +1,84 @@
-# React + TypeScript + Vite
+# SHAHI-DAWAN ERP — Next.js Migration Complete
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## Architecture
 
-Currently, two official plugins are available:
+Migrated from Vite + React SPA to Next.js 16 (App Router) full-stack ERP.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
 
-## React Compiler
+- Framework: Next.js 16.4.2 (App Router, Turbopack)
+- Frontend: React 19 + TypeScript + Tailwind CSS v4
+- Auth: jose (JWT) + bcryptjs + HTTP-only cookies
+- Database: MongoDB via Mongoose (with seed-data fallback)
+- Validation: Zod v4
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Quick Start
 
-## Expanding the Oxlint configuration
+1. npm install
+2. cp .env.example .env.local  (edit MONGODB_URI and SESSION_SECRET)
+3. npm run dev  -> http://localhost:3000
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Demo Login Credentials
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+- Admin: admin@shahidiwan.com / any password
+- Manager: manager@shahidiwan.com / any password
+- Inventory: inventory@shahidiwan.com / any password
+- Cashier: cashier@shahidiwan.com / any password
+- Chef: chef@shahidiwan.com / any password
+- Reception: reception@shahidiwan.com / any password
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Note: MongoDB is optional. When offline or empty, any seed user logs in with any password.
+
+## Routes
+
+### Public
+- / - Landing page
+- /about - About
+- /contact - Contact
+
+### Auth
+- /login - Staff login
+- /register - Staff registration
+
+### Dashboard (Protected)
+- /dashboard - Executive Operations Center
+- /dashboard/raw-materials - Raw Materials and Stock
+- /dashboard/stock-in - Stock In / Purchases
+- /dashboard/stock-out - Waste Management
+- /dashboard/stock-ledger - Stock Ledger Trail
+- /dashboard/recipes - Recipe / BOM Engine
+- /dashboard/menu - Menu Items and Pricing
+- /dashboard/pos - POS Order Terminal
+- /dashboard/kitchen - Kitchen Display (KDS)
+- /dashboard/tables - Floor Plan and Tables
+- /dashboard/hotel - Room Matrix and PMS
+- /dashboard/folio-billing - Hotel + Dining Folios
+- /dashboard/guests - Guest Directory CRM
+- /dashboard/suppliers - Suppliers Directory
+- /dashboard/reports - Analytics and Financials
+- /dashboard/audit-logs - Audit and Compliance
+- /dashboard/settings - System Parameters
+
+### API Endpoints
+- POST /api/auth/login
+- POST /api/auth/register
+- POST /api/auth/logout
+- GET  /api/auth/session
+- GET/POST /api/inventory
+- POST /api/stock-in
+- POST /api/stock-out
+- GET/POST /api/recipes
+- GET/POST /api/orders
+- PATCH /api/orders/[id]
+- GET  /api/reports/summary
+- GET  /api/users
+
+## Key Business Logic
+
+- Recipe BOM Auto-Deduction when orders are marked completed
+- Duplicate Deduction Prevention via inventoryDeducted flag
+- Unit Conversion Engine: KG/Gram/ML/Liter/Piece
+- Food Cost Percentage per recipe
+- Low Stock Alerts with status transitions
+- Stock Ledger full audit trail
+- Hotel PMS: Reservation to Check-In to Check-Out to Folio

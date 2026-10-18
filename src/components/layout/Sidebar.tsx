@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { useDb } from '../../context/DbContext';
 import {

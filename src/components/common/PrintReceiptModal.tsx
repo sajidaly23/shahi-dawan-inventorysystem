@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { RestaurantOrder } from '../../types';
 import { useDb } from '../../context/DbContext';
