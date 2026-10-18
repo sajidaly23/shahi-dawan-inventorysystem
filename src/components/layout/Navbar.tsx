@@ -21,6 +21,7 @@ import {
   CheckCircle2,
   ExternalLink,
   ChevronDown,
+  LogOut,
 } from 'lucide-react';
 import { smartFormatBaseQuantity } from '../../utils/unitConverter';
 
@@ -46,11 +47,24 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onNavigate }) =
   const [currentTime, setCurrentTime] = useState<string>('');
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const [showRoleMenu, setShowRoleMenu] = useState<boolean>(false);
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
 
   const notificationsRef = useRef<HTMLDivElement>(null);
   const roleMenuRef = useRef<HTMLDivElement>(null);
 
   const isLight = settings?.theme === 'light';
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await fetch('/api/auth/logout', { method: 'POST' });
+      showToast('info', 'Logged Out', 'Signed out successfully. Returning to home...');
+    } catch (e) {
+      // Continue redirect even on network hiccup
+    } finally {
+      window.location.href = '/';
+    }
+  };
 
   // Live real-time clock
   useEffect(() => {
@@ -506,9 +520,40 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onNavigate }) =
                     </button>
                   ))}
                 </div>
+
+                {/* Dropdown Logout Action */}
+                <div
+                  className={`p-2 border-t ${
+                    isLight ? 'bg-slate-50 border-slate-200' : 'bg-slate-900/90 border-slate-800'
+                  }`}
+                >
+                  <button
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                    className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl text-xs font-bold text-rose-400 hover:text-white bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 transition cursor-pointer"
+                  >
+                    <LogOut className="w-4 h-4 text-rose-400" />
+                    <span>{isLoggingOut ? 'Signing out...' : 'Sign Out / Return to Home'}</span>
+                  </button>
+                </div>
               </div>
             )}
           </div>
+
+          {/* Quick 1-Click Log Out Button */}
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all cursor-pointer ${
+              isLight
+                ? 'bg-rose-50 hover:bg-rose-100 border-rose-200 text-rose-600'
+                : 'bg-rose-500/10 hover:bg-rose-500/20 border-rose-500/30 text-rose-300 hover:text-white'
+            }`}
+            title="Log out and return to landing page"
+          >
+            <LogOut className="w-3.5 h-3.5 text-rose-400" />
+            <span className="hidden sm:inline">{isLoggingOut ? 'Leaving...' : 'Log Out'}</span>
+          </button>
         </div>
       </div>
     </header>

@@ -21,6 +21,7 @@ import {
   ShieldCheck,
   Settings,
   Sparkles,
+  LogOut,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -287,6 +288,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
             </div>
           </div>
+
+          <button
+            onClick={async () => {
+              try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+              } finally {
+                window.location.href = '/';
+              }
+            }}
+            className="w-full mt-2.5 flex items-center justify-center gap-2 py-2 px-3 rounded-xl text-xs font-bold text-rose-400 hover:text-white bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 hover:border-rose-500/40 transition cursor-pointer"
+            title="Log out and return to landing page"
+          >
+            <LogOut className="w-3.5 h-3.5 text-rose-400" />
+            <span>Sign Out & Return Home</span>
+          </button>
         </div>
       </aside>
     </>
